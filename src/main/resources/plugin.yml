@@ -1,0 +1,3 @@
+name: TimerPluginAtJava
+version: ${project.version}
+main: test.tonatumi.timerpluginatjava.TimerPluginAtJava
