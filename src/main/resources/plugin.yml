@@ -1,3 +1,8 @@
 name: TimerPluginAtJava
 version: ${project.version}
 main: test.tonatumi.timerpluginatjava.TimerPluginAtJava
+commands:
+  timer:
+    description: show timer help
+    usage: /<command>
+    default: true

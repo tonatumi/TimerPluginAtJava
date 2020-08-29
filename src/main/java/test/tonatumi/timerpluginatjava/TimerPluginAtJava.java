@@ -9,6 +9,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 public  class TimerPluginAtJava extends JavaPlugin {
 
     int time = 0;
+    int pauseTime;
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -30,14 +31,40 @@ public  class TimerPluginAtJava extends JavaPlugin {
             //start
             if (args[0].equalsIgnoreCase("start")) {
                 //runnableのやつ
-                start();
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        if(time==0){
+                            p.sendMessage("タイマー終了のお知らせ");
+                            cancel();
+                        }
+                        time --;
+                    }
+                }.runTaskTimer(this, 0, 20);
                 return true;
             }
 
             //stop
             if (args[0].equalsIgnoreCase("stop")) {
                 //止めるやつ
+                pauseTime = time;
+                time = 0;
                 return true;
+            }
+
+            //restart
+            if(args[0].equalsIgnoreCase("restart")){
+                time = pauseTime;
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        if(time==0){
+                            p.sendMessage("タイマー終了のお知らせ");
+                            cancel();
+                        }
+                        time --;
+                    }
+                }.runTaskTimer(this, 0, 20);
             }
 
             //delete
@@ -55,12 +82,11 @@ public  class TimerPluginAtJava extends JavaPlugin {
                 try {
                     Integer.parseInt(args[1]);
                     Integer.parseInt(args[2]);
-                    return true;
                 } catch (NumberFormatException e) {
                     p.sendMessage("数字でいれてください");
                     return true;
                 }
-                if (!(Integer.parseInt(args[2]) <= 59)) {
+                if (Integer.parseInt(args[2]) < 60) {
                     p.sendMessage("秒は59秒以内で");
                     return true;
 
@@ -72,7 +98,7 @@ public  class TimerPluginAtJava extends JavaPlugin {
         }
 
         p.sendMessage("wrong command");
-        return true;
+        return false;
     }
 
 
@@ -84,21 +110,10 @@ public  class TimerPluginAtJava extends JavaPlugin {
         p.sendMessage("/timer set [分] [秒] : ");
         p.sendMessage("/timer start : ");
         p.sendMessage("/timer stop : ");
+        p.sendMessage("/timer restart : ");
         p.sendMessage("/timer delete : ");
     }
 
-    //timer set
-
-
-    //timer start
-    public void start() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-
-            }
-        }.runTaskTimer(this, 0, 20);
-    }
 
 
     @Override
